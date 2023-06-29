@@ -1,0 +1,33 @@
+<nav class="bg-gray-800 shadow-2xl">
+  <div class="h-16 flex">
+    <div class="flex h-full items-center">
+      <div class="pl-4">
+        <img class="h-10 w-10" ngSrc="assets/angular.png" alt="site-log"
+             height="250" width="250">
+      </div>
+      <div class="pl-2">
+        <a class="text-white uppercase font-bold text-2xl tracking-wide"
+           [routerLink]="['/']">WoW
+          Places</a>
+      </div>
+    </div>
+    <div class="flex-1"></div>
+    <div class="flex h-full items-center">
+      <div class="mr-4">
+        <ul class="list-none flex items-center">
+          <li>
+            <a
+              class="text-white font-medium font-sans px-2 py-2 rounded cursor-pointer mx-3 hover:bg-rose-500 bg-gray-700"
+              [routerLink]="['/add-new-place']" routerLinkActive="bg-rose-500">Add
+              New Place</a>
+          </li>
+          <li>
+            <a
+              class="text-white font-medium font-sans px-2 py-2 rounded cursor-pointer mx-3 hover:bg-rose-500 bg-gray-700"
+              [routerLink]="['/about']" routerLinkActive="bg-rose-500">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
