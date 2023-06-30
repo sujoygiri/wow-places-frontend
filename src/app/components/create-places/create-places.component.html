@@ -1,26 +1,37 @@
 <div class="my-10 ">
   <div class="mx-2 md:mx-auto max-w-sm sm:max-w-md shadow-2xl ">
-    <div class="grid grid-cols-1 gap-y-4 p-4 border border-gray-500 rounded-md">
-      <div class="place-name-block">
-        <label for="place-name" class="block text-sm pb-1 font-medium leading-6 text-gray-900">Place Name</label>
-        <div class="flex rounded-md shadow ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-          <input type="text" name="place_name" id="place-name" class="block pl-2 flex-1 outline-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" >
+    <form enctype="multipart/form-data" [formGroup]="placeAddingForm" (ngSubmit)="sendData()">
+      <div class="grid grid-cols-1 gap-y-4 p-4 border border-gray-500 rounded-md">
+        <div class="place-image-block">
+          <span class="block text-sm font-medium leading-6 text-gray-900 mb-1">Upload place image</span>
+          <input class="block w-full text-base text-gray-900 border border-gray-500 rounded-md cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="image_input" type="file" name="placeImage" formControlName="placeImage" (change)="onFileChange($event)">
+        </div>
+        <div class="place-name-block">
+          <label for="place-name" class="block text-sm pb-1 font-medium leading-6 text-gray-900">Place Name</label>
+          <div class="flex rounded-md ring-1 ring-inset ring-gray-500 sm:max-w-md">
+            <input type="text" name="place_name" id="place-name" class="block pl-2 flex-1 outline-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" formControlName="placeName">
+          </div>
+        </div>
+        <div class="place-description-block">
+          <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Place Description</label>
+          <div class="pt-1">
+            <textarea id="about" name="about" rows="3" class="block pl-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 outline-0 sm:text-sm sm:leading-6" formControlName="placeDescription"></textarea>
+          </div>
+        </div>
+        <div class="tag-insert-block">
+          <p class="block text-sm font-medium leading-6 text-gray-900 mb-1">Tags <span class="text-xs text-gray-500">(Press enter or comma to add a tag)</span></p>
+          <div class="border border-gray-500 h-auto flex flex-wrap rounded-md" #input_tag_div>
+            <span class="px-3 py-2 m-1 bg-gray-500 rounded-full flex items-center" *ngFor="let tag of tags">{{tag}}<img class="ml-2 rounded-full bg-gray-600 cursor-pointer" height="16" width="16" ngSrc="assets/multiply.svg" alt="{{tag}}" (click)="removeTag(tag)"></span>
+            <input id="tag-input" class="flex-1 h-10 w-4 pl-2 border-none outline-0 rounded-md" type="text" #tag_input >
+          </div>
+          <p class="block text-xs font-medium leading-6 text-gray-600 mt-0.5">Maximum 4 tags allowed</p>
+        </div>
+        <div class="submit-button-bloc">
+          <div class="w-full">
+            <button class="text-white text-lg w-full h-8 bg-sky-600 hover:bg-sky-700 rounded-md">SUBMIT</button>
+          </div>
         </div>
       </div>
-      <div class="place-description-block">
-        <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Place Description</label>
-        <div class="pt-1">
-          <textarea id="about" name="about" rows="3" class="block pl-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" ></textarea>
-        </div>
-      </div>
-      <div class="tag-insert-block">
-        <p class="block text-sm font-medium leading-6 text-gray-900 mb-1">Tags <span class="text-xs text-gray-500">(Press enter or comma to add a tag)</span></p>
-        <div class="border border-gray-500 h-12 flex flex-wrap rounded-md" #input_tag_div>
-          <span class="px-3 py-2 m-1 bg-gray-500 rounded-full flex items-center" *ngFor="let tag of tags">{{tag}}<img class="ml-2 rounded-full bg-gray-600 cursor-pointer" height="16" width="16" ngSrc="assets/multiply.svg" alt="{{tag}}" (click)="removeTag(tag)"></span>
-          <input id="tag-input" class="flex-1 h-full w-4 pl-2 border-none outline-0 disabled:cursor-not-allowed focus:ring-2 focus:ring-inset focus:ring-indigo-600 rounded-md" type="text" #tag_input [disabled]="disableTagInput">
-        </div>
-        <p class="block text-xs font-medium leading-6 text-gray-600 mt-0.5">Maximum 4 tags allowed</p>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
