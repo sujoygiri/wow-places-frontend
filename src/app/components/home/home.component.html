@@ -1,20 +1,44 @@
 <div class="my-10">
   <div class="mx-auto max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-6xl">
-    <div class="grid grid-cols-3 gap-4">
-      <div class="max-w-sm rounded overflow-hidden shadow-2xl" *ngFor="let card of totalCard">
-        <img class="w-full" src="assets/card-top.jpg" alt="Sunset in the mountains">
-        <div class="px-6 py-4">
-          <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-          <p class="text-gray-700 text-base">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-          </p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="max-w-full rounded overflow-hidden shadow-2xl bg-slate-400" *ngFor="let place of places">
+        <img class="w-full h-60" src="{{'http://localhost:3000/'+place.placeImage}}" alt="{{place.placeName}}">
+        <div class="px-4 py-4">
+          <p class="font-bold text-xl">{{place.placeName}}</p>
+          <p class="mt-1 mb-2 text-xs font-semibold">{{place.date | date:'mediumDate'}}</p>
+          <p class="text-gray-900 text-base font-medium">{{place.placeDescription}}</p>
         </div>
-        <div class="px-6 pt-4 pb-2">
-          <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span>
-          <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
-          <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
+        <div class="px-4 pt-4 pb-2">
+          <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2" *ngFor="let tag of place.placeTags.split(',')">#{{tag}}</span>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<div class="flex flex-col items-center justify-center h-screen bg-gray-100" *ngIf="places.length <= 0">
+  <div class="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
+    <h2 class="text-2xl font-bold text-gray-800 text-center">
+      No Places Found
+    </h2>
+  </div>
+</div>
+
+
+<!-- <div id="toast-top-right" class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow top-20 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
+  <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z"/>
+    </svg>
+    <span class="sr-only">Warning icon</span>
+  </div>
+  <div class="ml-3 text-sm font-normal">Improve password difficulty.</div>
+  <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-warning" aria-label="Close">
+    <span class="sr-only">Close</span>
+    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+    </svg>
+  </button>
+</div> -->
+
+<p>&lt;</p>

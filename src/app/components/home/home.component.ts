@@ -1,4 +1,14 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+// import { map } from 'rxjs';
+
+interface Place {
+  date: Date;
+  placeName: string;
+  placeDescription: string;
+  placeImage: string;
+  placeTags: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -6,5 +16,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  totalCard:number[] = [1,2,3,4,5,6,7,8,9]
+  places: Place[] = [];
+  constructor(private http: HttpClient) { }
+
+  ngOnInit() {
+    this.http.get<Place[]>('http://localhost:3000/place/get-place').subscribe({
+      next: (response:Place[]) => {
+        this.places = response;
+      },
+      error: (error:any) => {
+        console.log(error);
+      }
+    });
+  }
 }
