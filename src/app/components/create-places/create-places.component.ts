@@ -5,10 +5,14 @@ import {
   Renderer2,
   OnInit,
   AfterViewInit,
+  OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
+
+import { GlobalService } from 'src/app/global.service';
+import { PlaceService } from 'src/app/service/place.service';
 // import { map } from 'rxjs';
 
 @Component({
@@ -16,7 +20,7 @@ import { Router } from '@angular/router';
   templateUrl: './create-places.component.html',
   styleUrls: ['./create-places.component.css'],
 })
-export class CreatePlacesComponent implements OnInit, AfterViewInit {
+export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('input_tag_div')
   inputTagDiv!: ElementRef;
   @ViewChild('tag_input')
@@ -28,18 +32,21 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit {
   placeAddingForm: FormGroup = new FormGroup({});
   imagePreviewLink: string = '';
   openModal: boolean = false;
-  placeImageFile:File = new File([], '')
   placeName: string = '';
   placeDescription: string = '';
   tagError: boolean = false;
   tagErrorMessage: string = '';
   waitForResponse: boolean = false;
+  serverError: boolean = false;
+  serverErrorMessage: string = '';
+  timeOutFunction: any;
 
   constructor(
     private renderer: Renderer2,
     private formBuilder: FormBuilder,
-    private http: HttpClient,
-    private route: Router
+    private route: Router,
+    private globalService: GlobalService,
+    private placeService:PlaceService
   ) {}
 
   ngOnInit() {
@@ -82,10 +89,13 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit {
       this.tagInputElement.nativeElement,
       'keydown',
       (event: any) => {
-        let inputTagValue: string = event.target.value.replace(/\s+/g, ' ').trim();
+        let inputTagValue: string = event.target.value
+          .replace(/\s+/g, ' ')
+          .trim();
         if (event.key === 'Enter') {
           if (
-            inputTagValue.length <= 2 || inputTagValue.length > 40 ||
+            inputTagValue.length <= 2 ||
+            inputTagValue.length > 40 ||
             this.tagsArray.includes(inputTagValue) ||
             this.tagsArray.length >= 4
           ) {
@@ -108,7 +118,7 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit {
     if (this.tagsArray.length < 1) {
       this.tagError = true;
       this.tagErrorMessage = 'Minimum one tag is required';
-      let timeOut = setTimeout(() => {
+      this.timeOutFunction = setTimeout(() => {
         this.tagError = false;
         this.tagErrorMessage = '';
       }, 2000);
@@ -122,23 +132,23 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit {
 
   closeModal() {
     this.openModal = false;
+    this.serverError = false;
+    this.serverErrorMessage = '';
   }
 
   sendData() {
     let userInputValue = this.placeAddingForm.value;
     let convertTagsToString = this.tagsArray.join(',');
     let formData = new FormData();
-    formData.append('placeImage', this.placeAddingForm.get('placeImage')?.value);
+    formData.append(
+      'placeImage',
+      this.placeAddingForm.get('placeImage')?.value
+    );
     formData.append('placeName', userInputValue.placeName.trim());
     formData.append('placeDescription', userInputValue.placeDescription.trim());
     formData.append('placeTags', convertTagsToString);
     this.waitForResponse = true;
-    this.http
-      .post('http://localhost:3000/place/add-place', formData, {
-        reportProgress: true,
-        observe: 'events',
-      })
-      .subscribe({
+    this.placeService.addPlace(formData).subscribe({
         next: (event: HttpEvent<any>) => {
           if (event.type === HttpEventType.Response) {
             this.placeAddingForm.reset();
@@ -148,13 +158,24 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit {
         },
         error: (error: any) => {
           this.waitForResponse = false;
-          console.log(error);
+          this.serverError = true;
+          this.serverErrorMessage = 'Something went wrong, please try again';
         },
         complete: () => {
           this.waitForResponse = false;
           this.openModal = false;
+          this.globalService.showToaster = true;
           this.route.navigate(['/home']);
         },
       });
+  }
+
+  dismissAlert() {
+    this.serverError = false;
+    this.serverErrorMessage = '';
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timeOutFunction);
   }
 }

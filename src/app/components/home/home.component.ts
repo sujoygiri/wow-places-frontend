@@ -1,32 +1,42 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 // import { map } from 'rxjs';
 
-interface Place {
-  date: Date;
-  placeName: string;
-  placeDescription: string;
-  placeImage: string;
-  placeTags: string;
-}
+import { GlobalService } from 'src/app/global.service';
+import { PlaceService } from 'src/app/service/place.service';
+import { Place } from 'src/app/types/place.types';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
   places: Place[] = [];
-  constructor(private http: HttpClient) { }
+  isErrorOccured: boolean = false;
+  timeOutFunction: any;
+  constructor(
+    protected globalService: GlobalService,
+    private placeService: PlaceService
+  ) {
+    if (this.globalService.showToaster) {
+      this.timeOutFunction = setTimeout(() => {
+        this.globalService.showToaster = false;
+      }, 3000);
+    }
+  }
 
   ngOnInit() {
-    this.http.get<Place[]>('http://localhost:3000/place/get-place').subscribe({
-      next: (response:Place[]) => {
+    this.placeService.getPlace().subscribe({
+      next: (response: Place[]) => {
         this.places = response;
       },
-      error: (error:any) => {
-        console.log(error);
-      }
+      error: (error: any) => {
+        this.isErrorOccured = true;
+      },
     });
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timeOutFunction);
   }
 }
