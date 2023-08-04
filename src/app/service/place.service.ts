@@ -16,9 +16,12 @@ export class PlaceService {
 
   addPlace(place:FormData):Observable<any>{
     return this.http.post('http://api.sujoygiri.me/place/add-place', place,  {
-      reportProgress: true,
-      observe: 'events',
+      reportProgress: true
     });
+  }
+
+  deletePlace(placeId:string):Observable<any>{
+    return this.http.delete(`http://api.sujoygiri.me/place/delete-place/${placeId}`);
   }
 
 }

@@ -4,4 +4,5 @@ export interface Place {
     placeDescription: string;
     placeImage: string;
     placeTags: string;
+    _id: string;
 }

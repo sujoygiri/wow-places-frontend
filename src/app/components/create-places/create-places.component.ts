@@ -51,7 +51,7 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.placeAddingForm = this.formBuilder.group({
-      placeImage: [null, [Validators.required]],
+      placeImage: ['', [Validators.required]],
       placeName: [
         '',
         [
@@ -136,7 +136,7 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.serverErrorMessage = '';
   }
 
-  sendData() {
+  createPlace() {
     let userInputValue = this.placeAddingForm.value;
     let convertTagsToString = this.tagsArray.join(',');
     let formData = new FormData();
@@ -165,6 +165,7 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
           this.waitForResponse = false;
           this.openModal = false;
           this.globalService.showToaster = true;
+          this.globalService.toasterMessage = 'Place added successfully';
           this.route.navigate(['/home']);
         },
       });

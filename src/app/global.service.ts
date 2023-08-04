@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class GlobalService {
 
   showToaster: boolean = false;
+  toasterMessage: string = '';
 
   constructor() { }
 }
