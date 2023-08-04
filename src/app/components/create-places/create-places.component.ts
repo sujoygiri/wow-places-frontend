@@ -39,6 +39,7 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
   waitForResponse: boolean = false;
   serverError: boolean = false;
   serverErrorMessage: string = '';
+  disableButton: boolean = false;
   timeOutFunction: any;
 
   constructor(
@@ -137,6 +138,7 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   createPlace() {
+    this.disableButton = true;
     let userInputValue = this.placeAddingForm.value;
     let convertTagsToString = this.tagsArray.join(',');
     let formData = new FormData();
@@ -159,10 +161,12 @@ export class CreatePlacesComponent implements OnInit, AfterViewInit, OnDestroy {
         error: (error: any) => {
           this.waitForResponse = false;
           this.serverError = true;
+          this.disableButton = false;
           this.serverErrorMessage = 'Something went wrong, please try again';
         },
         complete: () => {
           this.waitForResponse = false;
+          this.disableButton = false;
           this.openModal = false;
           this.globalService.showToaster = true;
           this.globalService.toasterMessage = 'Place added successfully';

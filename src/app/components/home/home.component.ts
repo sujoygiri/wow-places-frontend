@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   placeId: string = '';
   showMenu: boolean = false;
   showDeleteModal: boolean = false;
+  disableButton: boolean = false;
 
   constructor(
     protected globalService: GlobalService,
@@ -65,6 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onConfirmPlaceDelete(placeId: string){
+    this.disableButton = true;
     this.placeService.deletePlace(placeId).subscribe({
       next: (response: any) => {
         this.globalService.showToaster = true;
@@ -73,11 +75,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: (error: any) => {
         this.showDeleteModal = false;
+        this.disableButton = false;
         this.globalService.showToaster = true;
         this.globalService.toasterMessage = error.error.message;
       },
       complete: () => {
         this.showDeleteModal = false;
+        this.disableButton = false;
         clearTimeout(this.timeOutFunction);
         this.timeOutFunction = setTimeout(() => {
           this.globalService.showToaster = false;
